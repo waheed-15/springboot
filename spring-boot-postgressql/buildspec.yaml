@@ -19,7 +19,7 @@ phases:
       - kubectl apply -f postgres-storage.yaml
 
       - echo Applying postgres-deployment YAML file...
-      - kubectl apply -f postgres-deployment.yaml
+      - kubectl apply -f statefulset.yaml
 
       - echo Applying postgres-secrets YAML file...
       - kubectl apply -f postgres-service.yaml
