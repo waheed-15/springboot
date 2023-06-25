@@ -1,0 +1,34 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      kubectl: 1.21.2
+
+  pre_build:
+    commands:
+      - echo Logging in to your Kubernetes cluster...
+      - aws eks update-kubeconfig --name <your-cluster-name> --region <your-region>
+
+  build:
+    commands:
+      - echo Applying Postgres-secrets YAML file...
+      - kubectl apply -f postgres-secrets.yml
+
+      - echo Applying postgres-storage YAML file...
+      - kubectl apply -f postgres-storage.yaml
+
+      - echo Applying postgres-deployment YAML file...
+      - kubectl apply -f postgres-deployment.yaml
+
+      - echo Applying postgres-secrets YAML file...
+      - kubectl apply -f postgres-service.yaml
+
+      - echo creating configmap file...
+      - kubectl create configmap hostname-config --from-literal=postgres_host=$(kubectl get svc postgres -o jsonpath="{.spec.clusterIP}")
+
+      - echo Applying springboot deployment YAML file...
+      - kubectl apply -f springboot-deployment.yml
+
+      - echo Applying springboot-service yaml file...
+      - kubectl apply -f springboot-service.yml
